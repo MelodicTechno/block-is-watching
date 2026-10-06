@@ -1,0 +1,4 @@
+.bpx-player-video-info-online,
+[class*="video-info-online"] {
+  display: none !important;
+}
