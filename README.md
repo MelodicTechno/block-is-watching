@@ -31,6 +31,9 @@ content/
   content.js         文本锚点扫描 + MutationObserver + 路由监听
   content.css        已知观看人数容器 class 的兜底隐藏
 icons/               扩展图标
+scripts/
+  package.ps1        Windows / PowerShell 打包脚本
+  package.sh         Unix / Bash 打包脚本
 ```
 
 ## 工作原理
@@ -39,6 +42,26 @@ icons/               扩展图标
 - `content.js` 以文本「正在观看」为锚点查找元素，向上收敛到合理的容器并设置 `display: none`。
 - `MutationObserver` 监听 DOM 变化，处理异步渲染与站内导航，持续保持隐藏。
 - `content.css` 在 `document_start` 注入，对已知容器 class 做兜底隐藏，减少首帧闪烁。
+
+## 打包发布
+
+将扩展打包为可上传 Chrome Web Store 的 zip 分发包（无需任何额外依赖）：
+
+- Windows / PowerShell：
+
+  ```powershell
+  pwsh scripts/package.ps1
+  ```
+
+- Unix / Bash（需要系统 `zip` 命令）：
+
+  ```bash
+  bash scripts/package.sh
+  ```
+
+产物为 `dist/<name>-v<version>.zip`，其中 `<name>` 与 `<version>` 取自 `manifest.json`（名称中的空格会替换为 `-`）。压缩包根目录直接包含 `manifest.json`，可直接上传。
+
+打包仅包含运行时文件（`manifest.json`、`content/`、`icons/`、`README.md`），不会包含 `openspec/`、`.opencode/`、`scripts/`、`dist/`。重复执行会覆盖旧产物。
 
 ## 局限
 
